@@ -4,7 +4,7 @@ const { initializeApp } = require("firebase/app");
 const { getAuth } = require("firebase/app");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAICHMfGR-CqzecA7APddfkKJaXuOfIIcc",
+  apiKey: process.env.APIKEY,
   authDomain: "foodlife-994b9.firebaseapp.com",
   projectId: "foodlife-994b9",
   storageBucket: "foodlife-994b9.appspot.com",
