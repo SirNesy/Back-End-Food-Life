@@ -1,10 +1,12 @@
 // Import the functions you need from the SDKs you need
 
 const { initializeApp } = require("firebase/app");
-const { getAuth } = require("firebase/app");
+const { getAuth } = require("firebase/auth");
+const ENV = process.env.APIKEY;
+const { getFirestore } = require("firebase/firestore");
 
 const firebaseConfig = {
-  apiKey: process.env.APIKEY,
+  apiKey: `${__dirname}/../.env.${ENV}`,
   authDomain: "foodlife-994b9.firebaseapp.com",
   projectId: "foodlife-994b9",
   storageBucket: "foodlife-994b9.appspot.com",
@@ -16,5 +18,6 @@ const firebaseConfig = {
 // Initialize Firebase
 
 const app = initializeApp(firebaseConfig);
+exports.db = getFirestore(app);
 
-export const authentication = getAuth(app);
+exports.authentication = getAuth(app);
