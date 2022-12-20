@@ -1,4 +1,4 @@
-const { authentication, db } = require("../firebaseconfig.js");
+const { db } = require("../firebaseconfig.js");
 const { collection, addDoc, doc, getDoc } = require("firebase/firestore");
 
 exports.insertUser = async (userBody) => {
