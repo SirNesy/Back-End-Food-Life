@@ -1,17 +1,20 @@
 // Import the functions you need from the SDKs you need
+
 const { initializeApp } = require("firebase/app");
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-const ENV = process.env.APIKEY;
-// Your web app's Firebase configuration
+const { getAuth } = require("firebase/app");
+
 const firebaseConfig = {
-  apiKey: ENV,
-  authDomain: "foodlife-c8c83.firebaseapp.com",
-  projectId: "foodlife-c8c83",
-  storageBucket: "foodlife-c8c83.appspot.com",
-  messagingSenderId: "780210747110",
-  appId: "1:780210747110:web:bf07af0509b4a85d162d27",
+  apiKey: "AIzaSyAICHMfGR-CqzecA7APddfkKJaXuOfIIcc",
+  authDomain: "foodlife-994b9.firebaseapp.com",
+  projectId: "foodlife-994b9",
+  storageBucket: "foodlife-994b9.appspot.com",
+  messagingSenderId: "1070224308432",
+  appId: "1:1070224308432:web:f13ef29aae3407ecdf46d5",
+  measurementId: "G-J1T28CL52S",
 };
 
 // Initialize Firebase
+
 const app = initializeApp(firebaseConfig);
+
+export const authentication = getAuth(app);
