@@ -2,7 +2,7 @@ const request = require("supertest");
 const { authentication, db } = require("../firebaseconfig");
 const app = require("../app");
 
-describe("POST /api/users", () => {
+describe.only("POST /api/users", () => {
   test("201 response with new user", () => {
     return request(app)
       .post("/api/users")
@@ -67,7 +67,7 @@ describe("GET : /api/items", () => {
   });
 });
 
-describe.only("GET: /api/items/:item_id", () => {
+describe("GET: /api/items/:item_id", () => {
   test("200: should return an item of given id", () => {
     return request(app)
       .get("/api/items/AHzJ24JeW6YbxJCcJupC")

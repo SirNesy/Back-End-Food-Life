@@ -8,11 +8,9 @@ const {
 } = require("firebase/firestore");
 
 exports.insertUser = async (userBody) => {
-  const result = await setDoc(
-    collection(db, "users", userBody.userId),
-    userBody
-  );
-  const docreq = doc(db, "users", result.id);
+  console.log(userBody);
+  await setDoc(doc(db, "users", userBody.userId), userBody);
+  const docreq = doc(db, "users", userBody.userId);
   const data = await getDoc(docreq);
   return data.data();
 };
