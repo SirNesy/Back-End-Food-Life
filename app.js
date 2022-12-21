@@ -20,7 +20,7 @@ app.get("/api/items", getAllItems);
 app.get("/api/items/:item_id", getItemById);
 
 app.listen(9494, () => {
-  console.log("listen on 9090");
+  console.log("listen on 9494");
 });
 
 module.exports = app;
