@@ -43,8 +43,4 @@ app.all("/*", (req, res) => {
 
 app.use(handleCustomError);
 
-app.listen(9494, () => {
-  console.log("listen on 9494");
-});
-
 module.exports = app;
