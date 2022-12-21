@@ -3,6 +3,7 @@ const {
   selectAllItems,
   selectitemById,
   updateItem,
+  removeItem,
 } = require("../models/item-model");
 
 exports.postItem = (req, res, next) => {
@@ -22,7 +23,6 @@ exports.patchItem = (req, res, next) => {
   const itemBody = req.body;
   updateItem(itemBody, userId, itemId)
     .then((item) => {
-      console.log(item)
       res.status(200).send({ item: item });
     })
     .catch((err) => {
@@ -51,3 +51,24 @@ exports.getItemById = (req, res, next) => {
       next(err);
     });
 };
+
+exports.deleteItem = (req, res, next) => {
+  const { userId, itemId } = req.params;
+  removeItem(userId, itemId)
+    .then((item) => {
+      res.status(200).send({ msg: item.msg });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+// app.delete("/user/:user_id", async (req, res) => {
+//   const { user_id } = req.params;
+//   console.log(user_id);
+
+//   const docUser = doc(db, "users", user_id);
+
+//   await deleteDoc(docUser);
+//   res.send({ msg: "deleted successfully" });
+// });
