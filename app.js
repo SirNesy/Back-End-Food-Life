@@ -5,6 +5,7 @@ const {
   postItem,
   getAllItems,
   getItemById,
+  patchItem,
 } = require("./controllers/item-controller");
 const { handleCustomError } = require("./error");
 
@@ -17,6 +18,8 @@ app.post("/api/users", postUsers);
 app.get("/api/users/:userId", getUserById);
 
 app.post("/api/users/:userId/items", postItem);
+
+app.patch("/api/users/:userId/items/:itemId", patchItem)
 
 app.get("/api/users/:userId/items", getAllItems);
 

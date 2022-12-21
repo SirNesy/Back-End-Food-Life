@@ -51,7 +51,6 @@ describe("GET /api/users/:userId", () => {
       .get("/api/users/nonexistantuser")
       .expect(404)
       .then((res) => {
-        console.log(res);
         expect(res.body.msg).toBe("404: User Not Found");
       });
   });
@@ -98,8 +97,36 @@ describe("POST /api/users/:userId/items", () => {
   });
 });
 
+describe("PATCH /api/users/:userId/items/:itemId", () => {
+  test("200 should patch an item and return it", () => {
+    return request(app)
+      .patch("/api/users/0012abc/items/91FDWwSsVIsOr9AqQT5x")
+      .send({ itemName: "Potato", expiryDate: "25/02/2090", amount: 4 })
+      .expect(200)
+      .then(({body}) => {
+        expect(body.item).toMatchObject({
+          itemId: "91FDWwSsVIsOr9AqQT5x",
+          itemName: "Potato",
+          expiryDate: "25/02/2090",
+          amount: 4,
+          created_at: expect.any(Object),
+        });
+      })
+  });
+  //error handling
+  test("404 - user not found", () => {
+    return request(app)
+      .patch("/api/users/nonexistantuser/items/91FDWwSsVIsOr9AqQT5x")
+      .send({ itemName: "Potato", expiryDate: "25/02/2090", amount: 4 })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("404 - User Not Found");
+      });
+  });
+});
+
 describe("GET /api/users/:userId/items", () => {
-  test("should return an array of items", () => {
+  test("200 - should return an array of items", () => {
     return request(app)
       .get("/api/users/0012abc/items")
       .expect(200)
