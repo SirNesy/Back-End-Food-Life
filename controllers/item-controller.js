@@ -5,8 +5,9 @@ const {
 } = require("../models/item-model");
 
 exports.postItem = (req, res, next) => {
+  const {userId} = req.params;
   const itemBody = req.body;
-  insertItem(itemBody)
+  insertItem(itemBody, userId)
     .then((item) => {
       res.status(201).send({ item: item });
     })
@@ -16,7 +17,8 @@ exports.postItem = (req, res, next) => {
 };
 
 exports.getAllItems = (req, res, next) => {
-  selectAllItems()
+  const {userId} = req.params;
+  selectAllItems(userId)
     .then((items) => {
       res.status(200).send({ items });
     })
@@ -26,9 +28,10 @@ exports.getAllItems = (req, res, next) => {
 };
 
 exports.getItemById = (req, res, next) => {
-  const { item_id } = req.params;
-  console.log(item_id);
-  selectitemById(item_id).then((item) => {
+  const { userId, itemId } = req.params;
+  selectitemById(itemId, userId).then((item) => {
     res.status(200).send({ item });
+  }).catch(err => {
+    next(err);
   });
 };
