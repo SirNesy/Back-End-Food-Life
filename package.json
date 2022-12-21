@@ -1,6 +1,8 @@
 {
+  "main": "listen.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node listen.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
