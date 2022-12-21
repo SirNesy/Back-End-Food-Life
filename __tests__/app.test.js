@@ -2,7 +2,7 @@ const request = require("supertest");
 const { authentication, db } = require("../firebaseconfig");
 const app = require("../app");
 
-describe.only("POST /api/users", () => {
+describe("POST /api/users", () => {
   test("201 response with new user", () => {
     return request(app)
       .post("/api/users")
