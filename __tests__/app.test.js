@@ -463,13 +463,15 @@ describe("GET: /api/recipes", () => {
             ready_in_minutes: expect.any(Number),
             sourceUrl: expect.any(String),
             summary: expect.any(String),
+            title: expect.any(String),
+            created_at: expect.any(Object)
           });
         });
       });
   });
 });
 
-describe.only("GET /api/recipes/:recipeId", () => {
+describe("GET /api/recipes/:recipeId", () => {
   test("200 - responds with a recipe object", () => {
     return request(app)
       .get("/api/recipes/example-recipe")
@@ -484,7 +486,8 @@ describe.only("GET /api/recipes/:recipeId", () => {
           ready_in_minutes: expect.any(Number),
           sourceUrl: expect.any(String),
           summary: expect.any(String),
-          title: expect.any(String)
+          title: expect.any(String),
+          created_at: expect.any(Object)
         });
       });
   });
@@ -493,10 +496,160 @@ describe.only("GET /api/recipes/:recipeId", () => {
       .get("/api/recipes/nonexistant-recipe")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("404 - Recipe Not Found")
+        expect(body.msg).toBe("404 - Recipe Not Found");
       });
   });
 });
 
+describe("POST /api/recipes", () => {
+  test("201 - responds with new recipe", () => {
+    return request(app)
+      .post("/api/recipes")
+      .send({
+        userId: "0012abc",
+        cuisines: ["Mexican"],
+        imageUrl:
+          "https://cdn.britannica.com/13/234013-050-73781543/rice-and-chorizo-burrito.jpg",
+        ingredients: [
+          {
+            name: "tortilla",
+            amount: 1,
+            units: "cups",
+          },
+        ],
+        instructions: "askjdhgfkerhtiphergn",
+        ready_in_minutes: 30,
+        sourceUrl: "https://www.britannica.com/topic/burrito",
+        summary: "tasty burrito",
+        title: "Burritos",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.recipe).toEqual({
+          userId: "0012abc",
+          cuisines: ["Mexican"],
+          imageUrl:
+            "https://cdn.britannica.com/13/234013-050-73781543/rice-and-chorizo-burrito.jpg",
+          ingredients: [
+            {
+              name: "tortilla",
+              amount: 1,
+              units: "cups",
+            },
+          ],
+          instructions: "askjdhgfkerhtiphergn",
+          ready_in_minutes: 30,
+          sourceUrl: "https://www.britannica.com/topic/burrito",
+          summary: "tasty burrito",
+          title: "Burritos",
+          created_at: expect.any(Object),
+        });
+      });
+  });
+  test("400 - Bad Request - Invalid Recipe Body", () => {
+    return request(app)
+      .post("/api/recipes")
+      .send({userId: "0012abc",
+      cuisines: ["Mexican"],
+      imageUrl:
+        "https://cdn.britannica.com/13/234013-050-73781543/rice-and-chorizo-burrito.jpg",
+      ingredients: [
+        {
+          name: "tortilla",
+          amount: 1,
+          units: "cups",
+        },
+      ],
+      })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("400 - Bad Request - Invalid Recipe Body");
+      });
+  });
+  test("404 - user not found", () => {
+    return request(app)
+      .post("/api/recipes")
+      .send({
+        userId: "Isaac",
+        cuisines: ["Mexican"],
+        imageUrl:
+          "https://cdn.britannica.com/13/234013-050-73781543/rice-and-chorizo-burrito.jpg",
+        ingredients: [
+          {
+            name: "tortilla",
+            amount: 1,
+            units: "cups",
+          },
+        ],
+        instructions: "askjdhgfkerhtiphergn",
+        ready_in_minutes: 30,
+        sourceUrl: "https://www.britannica.com/topic/burrito",
+        summary: "tasty burrito",
+        title: "Burritos",
+      })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("404 - User Not Found");
+      });
+  });
+});
 
+describe('PATCH /api/recipes/:recipeId', () => {
+  test('200 - Patches a recipe', () => { 
+    return request(app)
+      .patch("/api/recipes/8gYNrZtqXptuOzYw5qon")
+      .send({   
+        instructions: "askjdhgfkerhtiphergn",
+        ready_in_minutes: 25,
+        summary: "delicious tacos",
+        title: "tacos",
+      })
+      .expect(200)
+      .then(({body}) => {
+        expect(body.recipe).toEqual({
+          userId: "0012abc",
+          cuisines: ["Mexican"],
+          imageUrl:
+            "https://cdn.britannica.com/13/234013-050-73781543/rice-and-chorizo-burrito.jpg",
+          ingredients: [
+            {
+              name: "tortilla",
+              amount: 1,
+              units: "cups",
+            },
+          ],
+          instructions: "askjdhgfkerhtiphergn",
+          ready_in_minutes: 25,
+          sourceUrl: "https://www.britannica.com/topic/burrito",
+          summary: "delicious tacos",
+          title: "tacos",
+          created_at: expect.any(Object),
+        });
+      });
+   })
+   test("404 - recipe not found", () => {
+    return request(app)
+      .patch("/api/recipes/nonexistant-recipe")
+      .send({   
+        instructions: "askjdhgfkerhtiphergn",
+        ready_in_minutes: 25,
+        summary: "delicious tacos",
+        title: "tacos",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 - Recipe Not Found");
+      });
+  });
+ })
 
+  describe('DELETE /api/recipe/recipeId', () => { 
+    test("200 : Deleted Successfully", () => {
+      return request(app)
+        .delete("/api/recipes/wGKGNCY4XHLCGMwUNX3z")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.msg).toBe("200 : Item Deleted Successfully");
+        });
+    });
+   })
