@@ -41,14 +41,12 @@ exports.updateItem = async (itemBody, userId, itemId) => {
     return Promise.reject({ status: 404, msg: "404 - User Not Found" });
   }
   
-  console.log(itemId)
   const userRef = doc(db, "users", userId);
   const itemsRef = collection(userRef, "items");
   const itemRef = doc(itemsRef, itemId)
   await updateDoc(itemRef, itemBody);
 
   const itemData = await getDoc(itemRef);
-  console.log(itemData.data());
   return { itemId: itemData.id, ...itemData.data() };
 };
 

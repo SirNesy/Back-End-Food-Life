@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { postUsers, getUserById } = require("./controllers/user-controller");
+const { getRecipes } = require("./controllers/recipe-controller");
 const {
   postItem,
   getAllItems,
@@ -19,15 +20,17 @@ app.get("/api/users/:userId", getUserById);
 
 app.post("/api/users/:userId/items", postItem);
 
-app.patch("/api/users/:userId/items/:itemId", patchItem)
+app.patch("/api/users/:userId/items/:itemId", patchItem);
 
 app.get("/api/users/:userId/items", getAllItems);
 
 app.get("/api/users/:userId/items/:itemId", getItemById);
 
+app.get("/api/recipes", getRecipes);
+
 app.all("/*", (req, res) => {
-  res.status(404).send("404: URL Not Found")
-})
+  res.status(404).send("404: URL Not Found");
+});
 
 app.use(handleCustomError);
 

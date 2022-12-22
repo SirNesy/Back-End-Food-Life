@@ -34,7 +34,6 @@ describe("GET /api/users/:userId", () => {
       .get("/api/users/0012abc")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.user).toEqual({
           userId: "0012abc",
           firstName: "john",
@@ -153,7 +152,7 @@ describe("GET /api/users/:userId/items", () => {
   });
 });
 
-describe("GET: /api/users/:userId/items/:itemId", () => {
+describe("GET /api/users/:userId/items/:itemId", () => {
   test("200: should return an item of given id", () => {
     return request(app)
       .get("/api/users/0012abc/items/8CPAB9glO9hOFsgYa22J")
@@ -186,3 +185,26 @@ describe("GET: /api/users/:userId/items/:itemId", () => {
       });
   });
 });
+
+describe('GET: /api/recipes', () => { 
+  test('200 - responds with an array of recipes', () => {
+    return request(app)
+    .get("/api/recipes")
+    .expect(200)
+    .then(({body}) => {
+      body.recipes.forEach(recipe => {
+        expect(recipe).toEqual({
+          userId: expect.any(String),
+          cuisines: expect.any(Array),
+          imageUrl: expect.any(String),
+          ingredients: expect.any(Array),
+          instructions: expect.any(String),
+          ready_in_minutes: expect.any(Number),
+          sourceUrl: expect.any(String),
+          summary: expect.any(String),
+          title: expect.any(String)
+        });
+      })
+    })
+  });
+ })

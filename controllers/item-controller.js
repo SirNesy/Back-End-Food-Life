@@ -22,7 +22,6 @@ exports.patchItem = (req, res, next) => {
   const itemBody = req.body;
   updateItem(itemBody, userId, itemId)
     .then((item) => {
-      console.log(item)
       res.status(200).send({ item: item });
     })
     .catch((err) => {
