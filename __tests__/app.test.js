@@ -262,9 +262,6 @@ describe("DELETE : /api/users/:userId/items/:itemId", () => {
       });
   });
 });
-const request = require("supertest");
-const { authentication, db } = require("../firebaseconfig");
-const app = require("../app");
 
 describe("POST /api/users", () => {
   test("201 response with new user", () => {
@@ -366,7 +363,7 @@ describe("PATCH /api/users/:userId/items/:itemId", () => {
       .patch("/api/users/0012abc/items/91FDWwSsVIsOr9AqQT5x")
       .send({ itemName: "Potato", expiryDate: "25/02/2090", amount: 4 })
       .expect(200)
-      .then(({body}) => {
+      .then(({ body }) => {
         expect(body.item).toMatchObject({
           itemId: "91FDWwSsVIsOr9AqQT5x",
           itemName: "Potato",
@@ -374,7 +371,7 @@ describe("PATCH /api/users/:userId/items/:itemId", () => {
           amount: 4,
           created_at: expect.any(Object),
         });
-      })
+      });
   });
   //error handling
   test("404 - user not found", () => {
@@ -450,15 +447,35 @@ describe("GET /api/users/:userId/items/:itemId", () => {
   });
 });
 
-
-describe('GET: /api/recipes', () => { 
-  test('200 - responds with an array of recipes', () => {
+describe("GET: /api/recipes", () => {
+  test("200 - responds with an array of recipes", () => {
     return request(app)
-    .get("/api/recipes")
-    .expect(200)
-    .then(({body}) => {
-      body.recipes.forEach(recipe => {
-        expect(recipe).toEqual({
+      .get("/api/recipes")
+      .expect(200)
+      .then(({ body }) => {
+        body.recipes.forEach((recipe) => {
+          expect(recipe).toEqual({
+            userId: expect.any(String),
+            cuisines: expect.any(Array),
+            imageUrl: expect.any(String),
+            ingredients: expect.any(Array),
+            instructions: expect.any(String),
+            ready_in_minutes: expect.any(Number),
+            sourceUrl: expect.any(String),
+            summary: expect.any(String),
+          });
+        });
+      });
+  });
+});
+
+describe.only("GET /api/recipes/:recipeId", () => {
+  test("200 - responds with a recipe object", () => {
+    return request(app)
+      .get("/api/recipes/example-recipe")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.recipe).toEqual({
           userId: expect.any(String),
           cuisines: expect.any(Array),
           imageUrl: expect.any(String),
@@ -466,9 +483,20 @@ describe('GET: /api/recipes', () => {
           instructions: expect.any(String),
           ready_in_minutes: expect.any(Number),
           sourceUrl: expect.any(String),
-          summary:
+          summary: expect.any(String),
+          title: expect.any(String)
         });
-      })
-    })
+      });
   });
- })
+  test("404 - recipe not found", () => {
+    return request(app)
+      .get("/api/recipes/nonexistant-recipe")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("404 - Recipe Not Found")
+      });
+  });
+});
+
+
+
