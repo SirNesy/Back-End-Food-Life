@@ -55,6 +55,63 @@ describe("GET /api/users/:userId", () => {
   });
 });
 
+describe("PATCH /api/users/:userId", () => {
+  test("200 : profile updated", () => {
+    return request(app)
+      .patch("/api/users/0012abc")
+      .send({
+        firstName: "Derek",
+        lastName: "Brown",
+        bio: "I am chef",
+      })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user).toEqual({
+          userId: "0012abc",
+          firstName: "Derek",
+          lastName: "Brown",
+          profile_pic: null,
+          email: "johndoe@gmail.com",
+          bio: "I am chef",
+        });
+      });
+  });
+
+  test("404 - user not found", () => {
+    return request(app)
+      .patch("/api/users/nonexistantuser")
+      .send({
+        firstName: "Derek",
+        lastName: "Brown",
+        bio: "I am chef",
+      })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("404 - User Not Found");
+      });
+  });
+});
+
+describe("DELETE  /api/users/:userId", () => {
+  test("204 : User Deleted Successfully", () => {
+    return request(app)
+      .delete("/api/users/DlqYIFoX33NeEmpZwihV1APmYem2")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.msg).toBe("200 : User Deleted Successfully");
+      });
+  });
+
+  test("404 - user not found", () => {
+    return request(app)
+      .delete("/api/users/nonexistantuser")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("404 - User Not Found");
+      });
+  });
+});
+
 describe("POST /api/users/:userId/items", () => {
   test("201 response with new item", () => {
     return request(app)
@@ -102,7 +159,7 @@ describe("PATCH /api/users/:userId/items/:itemId", () => {
       .patch("/api/users/0012abc/items/91FDWwSsVIsOr9AqQT5x")
       .send({ itemName: "Potato", expiryDate: "25/02/2090", amount: 4 })
       .expect(200)
-      .then(({body}) => {
+      .then(({ body }) => {
         expect(body.item).toMatchObject({
           itemId: "91FDWwSsVIsOr9AqQT5x",
           itemName: "Potato",
@@ -110,7 +167,7 @@ describe("PATCH /api/users/:userId/items/:itemId", () => {
           amount: 4,
           created_at: expect.any(Object),
         });
-      })
+      });
   });
   //error handling
   test("404 - user not found", () => {
@@ -186,6 +243,7 @@ describe("GET /api/users/:userId/items/:itemId", () => {
   });
 });
 
+<<<<<<< HEAD
 describe('GET: /api/recipes', () => { 
   test('200 - responds with an array of recipes', () => {
     return request(app)
@@ -208,3 +266,24 @@ describe('GET: /api/recipes', () => {
     })
   });
  })
+=======
+describe("DELETE : /api/users/:userId/items/:itemId", () => {
+  test("204 : Deleted Successfully", () => {
+    return request(app)
+      .delete("/api/users/0012abc/items/jIcN7s1X5vcFEFoKNglE ")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.msg).toBe("204 : Item Deleted Successfully");
+      });
+  });
+
+  test("404 - user not found", () => {
+    return request(app)
+      .delete("/api/users/nonexistantuser/items/8CPAB9glO9hOFsgYa22J")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("404 - User Not Found");
+      });
+  });
+});
+>>>>>>> af8a08f63f4d7b1096700ab142d293e7b5df7e1b

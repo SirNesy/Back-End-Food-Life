@@ -3,10 +3,17 @@ const cors = require("cors");
 const { postUsers, getUserById } = require("./controllers/user-controller");
 const { getRecipes } = require("./controllers/recipe-controller");
 const {
+  postUsers,
+  getUserById,
+  patchUser,
+  deleteUser,
+} = require("./controllers/user-controller");
+const {
   postItem,
   getAllItems,
   getItemById,
   patchItem,
+  deleteItem,
 } = require("./controllers/item-controller");
 const { handleCustomError } = require("./error");
 
@@ -18,6 +25,10 @@ app.post("/api/users", postUsers);
 
 app.get("/api/users/:userId", getUserById);
 
+app.patch("/api/users/:userId", patchUser);
+
+app.delete("/api/users/:userId", deleteUser);
+
 app.post("/api/users/:userId/items", postItem);
 
 app.patch("/api/users/:userId/items/:itemId", patchItem);
@@ -28,14 +39,12 @@ app.get("/api/users/:userId/items/:itemId", getItemById);
 
 app.get("/api/recipes", getRecipes);
 
+app.delete("/api/users/:userId/items/:itemId", deleteItem);
+
 app.all("/*", (req, res) => {
   res.status(404).send("404: URL Not Found");
 });
 
 app.use(handleCustomError);
-
-app.listen(9494, () => {
-  console.log("listen on 9494");
-});
 
 module.exports = app;

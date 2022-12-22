@@ -6,6 +6,7 @@ const {
   getDoc,
   getDocs,
   updateDoc,
+  deleteDoc,
 } = require("firebase/firestore");
 
 exports.insertItem = async (itemBody, userId) => {
@@ -40,10 +41,9 @@ exports.updateItem = async (itemBody, userId, itemId) => {
   if (!user.exists()) {
     return Promise.reject({ status: 404, msg: "404 - User Not Found" });
   }
-  
   const userRef = doc(db, "users", userId);
   const itemsRef = collection(userRef, "items");
-  const itemRef = doc(itemsRef, itemId)
+  const itemRef = doc(itemsRef, itemId);
   await updateDoc(itemRef, itemBody);
 
   const itemData = await getDoc(itemRef);
@@ -89,4 +89,17 @@ exports.selectitemById = async (itemId, userId) => {
   }
 
   return itemData;
+};
+
+exports.removeItem = async (userId, itemId) => {
+  //check if user exists
+  const user = await getDoc(doc(db, "users", userId));
+  if (!user.exists()) {
+    return Promise.reject({ status: 404, msg: "404 - User Not Found" });
+  }
+  const userRef = doc(db, "users", userId);
+  const itemsRef = collection(userRef, "items");
+  const itemRef = doc(itemsRef, itemId);
+  result = await deleteDoc(itemRef);
+  return { status: 204, msg: "204 : Item Deleted Successfully" };
 };
