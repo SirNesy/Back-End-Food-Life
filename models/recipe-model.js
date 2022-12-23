@@ -49,31 +49,28 @@ exports.insertRecipe = async (recipeBody) => {
     return Promise.reject({ status: 404, msg: "404 - User Not Found" });
   }
   recipeBody.created_at = new Date();
-  console.log(recipeBody);
   const recipesRef = collection(db, "recipes");
   const result = await addDoc(recipesRef, recipeBody);
-  console.log(result.id);
   const recipe = await getDoc(doc(recipesRef, result.id));
-  console.log(recipe);
   return recipe.data();
 };
 
 exports.updateRecipe = async (recipeBody, recipeId) => {
-    const recipeRef = doc(db, "recipes", recipeId);
-    
-    const recipe = await getDoc(recipeRef);
-    if (!recipe.exists()) {
-        return Promise.reject({ status: 404, msg: "404 - Recipe Not Found" });
-    }
-    await updateDoc(recipeRef, recipeBody);
-    
-    const updatedRecipe = await getDoc(recipeRef);
-    return updatedRecipe.data();
-}
+  const recipeRef = doc(db, "recipes", recipeId);
 
-// exports.removeRecipe = async (recipeId) => {
-//     const recipeRef = doc(db, "recipes", recipeId);
-//     await deleteDoc(recipeRef);
+  const recipe = await getDoc(recipeRef);
+  if (!recipe.exists()) {
+    return Promise.reject({ status: 404, msg: "404 - Recipe Not Found" });
+  }
+  await updateDoc(recipeRef, recipeBody);
 
-//     return { status: 200, msg: "200 : Item Deleted Successfully" };
-// }
+  const updatedRecipe = await getDoc(recipeRef);
+  return updatedRecipe.data();
+};
+
+exports.removeRecipe = async (recipeId) => {
+  const recipeRef = doc(db, "recipes", recipeId);
+  await deleteDoc(recipeRef);
+
+  return { status: 200, msg: "200 : Item Deleted Successfully" };
+};

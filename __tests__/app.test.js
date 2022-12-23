@@ -464,7 +464,7 @@ describe("GET: /api/recipes", () => {
             sourceUrl: expect.any(String),
             summary: expect.any(String),
             title: expect.any(String),
-            created_at: expect.any(Object)
+            created_at: expect.any(Object),
           });
         });
       });
@@ -487,7 +487,7 @@ describe("GET /api/recipes/:recipeId", () => {
           sourceUrl: expect.any(String),
           summary: expect.any(String),
           title: expect.any(String),
-          created_at: expect.any(Object)
+          created_at: expect.any(Object),
         });
       });
   });
@@ -549,17 +549,18 @@ describe("POST /api/recipes", () => {
   test("400 - Bad Request - Invalid Recipe Body", () => {
     return request(app)
       .post("/api/recipes")
-      .send({userId: "0012abc",
-      cuisines: ["Mexican"],
-      imageUrl:
-        "https://cdn.britannica.com/13/234013-050-73781543/rice-and-chorizo-burrito.jpg",
-      ingredients: [
-        {
-          name: "tortilla",
-          amount: 1,
-          units: "cups",
-        },
-      ],
+      .send({
+        userId: "0012abc",
+        cuisines: ["Mexican"],
+        imageUrl:
+          "https://cdn.britannica.com/13/234013-050-73781543/rice-and-chorizo-burrito.jpg",
+        ingredients: [
+          {
+            name: "tortilla",
+            amount: 1,
+            units: "cups",
+          },
+        ],
       })
       .expect(400)
       .then((res) => {
@@ -594,18 +595,18 @@ describe("POST /api/recipes", () => {
   });
 });
 
-describe('PATCH /api/recipes/:recipeId', () => {
-  test('200 - Patches a recipe', () => { 
+describe("PATCH /api/recipes/:recipeId", () => {
+  test("200 - Patches a recipe", () => {
     return request(app)
       .patch("/api/recipes/8gYNrZtqXptuOzYw5qon")
-      .send({   
+      .send({
         instructions: "askjdhgfkerhtiphergn",
         ready_in_minutes: 25,
         summary: "delicious tacos",
         title: "tacos",
       })
       .expect(200)
-      .then(({body}) => {
+      .then(({ body }) => {
         expect(body.recipe).toEqual({
           userId: "0012abc",
           cuisines: ["Mexican"],
@@ -626,11 +627,11 @@ describe('PATCH /api/recipes/:recipeId', () => {
           created_at: expect.any(Object),
         });
       });
-   })
-   test("404 - recipe not found", () => {
+  });
+  test("404 - recipe not found", () => {
     return request(app)
       .patch("/api/recipes/nonexistant-recipe")
-      .send({   
+      .send({
         instructions: "askjdhgfkerhtiphergn",
         ready_in_minutes: 25,
         summary: "delicious tacos",
@@ -641,15 +642,90 @@ describe('PATCH /api/recipes/:recipeId', () => {
         expect(body.msg).toBe("404 - Recipe Not Found");
       });
   });
- })
+});
 
-  describe('DELETE /api/recipe/recipeId', () => { 
-    test("200 : Deleted Successfully", () => {
-      return request(app)
-        .delete("/api/recipes/wGKGNCY4XHLCGMwUNX3z")
-        .expect(200)
-        .then((res) => {
-          expect(res.body.msg).toBe("200 : Item Deleted Successfully");
+describe("DELETE /api/recipe/recipeId", () => {
+  test("200 : Deleted Successfully", () => {
+    return request(app)
+      .delete("/api/recipes/gvUk14N4QJ0zP4kZLza0")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.msg).toBe("200 : Item Deleted Successfully");
+      });
+  });
+});
+
+describe("POST /api/comments", () => {
+  test("201 - responds with new comment", () => {
+    return request(app)
+      .post("/api/comments")
+      .send({
+        userId: "0012abc",
+        recipeId: "azKUAPASOJO9MdgWBTXV",
+        commentBody: "fhgkjhdfshgfjdshgjsdhjg",
+        votes: 0,
+      })
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({
+          userId: "0012abc",
+          recipeId: "azKUAPASOJO9MdgWBTXV",
+          commentBody: "fhgkjhdfshgfjdshgjsdhjg",
+          votes: 0,
+          created_at: expect.any(Object),
         });
-    });
-   })
+      });
+  });
+});
+
+describe("GET /api/recipes/:recipeId/comments", () => {
+  test("200 responds with specified comments", () => {
+    return request(app)
+      .get("/api/recipes/0sLNCr7BQlIPUbCYEQhR/comments")
+      .expect(200)
+      .then(({ body }) => {
+        body.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            commentId: expect.any(String),
+            userId: expect.any(String),
+            recipeId: "0sLNCr7BQlIPUbCYEQhR",
+            commentBody: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(Object),
+          });
+        });
+      });
+  });
+});
+
+describe("DELETE /api/comments/:commentId", () => {
+  test("200 : Deleted Successfully", () => {
+    return request(app)
+      .delete("/api/comments/raQtbLjVSXy6c87A4MXl")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.msg).toBe("200 : Comment Deleted Successfully");
+      });
+  });
+});
+
+describe("PATCH /api/comments/:commentId", () => {
+  test.only("200 should patch a comment and return it", () => {
+    return request(app)
+      .patch("/api/comments/cBhUpWoLo2koyJXb4YLz")
+      .send({
+        inc_votes: 1,
+        userId: "0012abc",
+      })
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comment).toMatchObject({
+          userId: expect.any(String),
+          recipeId: "0sLNCr7BQlIPUbCYEQhR",
+          commentBody: expect.any(String),
+          votes: 1,
+          created_at: expect.any(Object),
+        });
+      });
+  });
+});

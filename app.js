@@ -1,6 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const { getRecipes, getRecipe, postRecipe, patchRecipe, deleteRecipe } = require("./controllers/recipe-controller");
+const {
+  getRecipes,
+  getRecipe,
+  postRecipe,
+  patchRecipe,
+  deleteRecipe,
+} = require("./controllers/recipe-controller");
 const {
   postUsers,
   getUserById,
@@ -14,6 +20,12 @@ const {
   patchItem,
   deleteItem,
 } = require("./controllers/item-controller");
+const {
+  postComment,
+  getComments,
+  deleteComment,
+  patchComment,
+} = require("./controllers/comments-controller");
 const { handleCustomError } = require("./error");
 
 const app = express();
@@ -42,11 +54,19 @@ app.get("/api/recipes", getRecipes);
 
 app.get("/api/recipes/:recipeId", getRecipe);
 
-app.post("/api/recipes", postRecipe)
+app.post("/api/recipes", postRecipe);
 
-app.patch("/api/recipes/:recipeId", patchRecipe)
+app.patch("/api/recipes/:recipeId", patchRecipe);
 
-// app.delete("/api/recipes/:recipeId", deleteRecipe);
+app.delete("/api/recipes/:recipeId", deleteRecipe);
+
+app.post("/api/comments", postComment);
+
+app.get("/api/recipes/:recipeId/comments", getComments);
+
+app.delete("/api/comments/:commentId", deleteComment);
+
+app.patch("/api/comments/:commentId", patchComment);
 
 app.all("/*", (req, res) => {
   res.status(404).send("404: URL Not Found");
